@@ -1,0 +1,58 @@
+<% include header %>
+
+<h1><%- title %></h1>
+<p id="browser_type"></p>
+<h2>Total query length: <%- queryLength %></h2>
+<p>
+  <%- queryString; %>
+</p>
+<hr/>
+
+<h2 id="dmp_length">DMP:</h2>
+<p id="dmp"></p>
+<hr/>
+
+<h2 id="cui_length">CUI:</h2>
+<p id="cui"></p>
+<hr/>
+
+<div id="queryString" style="display: none"><%- queryString %></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+<script>
+  function verified_cust_params(key) {
+    var custs = {};
+    var queryString = $('#queryString').text();
+    queryString.split('&').forEach(function (v) {
+      var t = v.split('=');
+      custs[t[0]] = t[1];
+    })
+    var parsed_cust_str = decodeURIComponent(custs[key]);
+
+    console.log(parsed_cust_str);
+    return parsed_cust_str;
+  }
+
+  $(function () {
+    var dmp = verified_cust_params('dmp');
+    var dmp_length = dmp.length;
+    if (!dmp_length) {
+      dmp_length = 0;
+    }
+    $('#dmp').html(dmp).fadeIn(500);
+    $('#dmp_length').append(dmp_length);
+
+    var cui = verified_cust_params('cui');
+    var cui_length = cui.length;
+    if (!cui_length) {
+      cui_length = 0;
+    }
+    $('#cui').html(cui).fadeIn(500);
+    $('#cui_length').append(cui_length);
+
+    var browser_type = window.navigator.userAgent;
+    $('#browser_type').text(browser_type);
+  });
+</script>
+
+<% include footer %>
